@@ -290,7 +290,7 @@ namespace UnityDPtools
             3 => 2, // Defog - minimum 2 badges
             4 => 7, // Icicle Badge -badge #7
             5 => 8, // Waterfall - minimum 8 badges
-            6 => 9, // National Dex - postgame
+            6 => 1, // National Dex - available without requirement if you complete Sinnoh Dex early + reach Eterna City
             _ => throw new ArgumentOutOfRangeException(nameof(progressRequired)),
         };
     }
