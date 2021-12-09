@@ -17,6 +17,14 @@ namespace UnityDPtools
             CreatePersonalBinary(Path.ChangeExtension(path, null), table);
         }
 
+        public static void ParseExtra(string path)
+        {
+            var text = File.ReadAllText(path);
+            var obj = JsonConvert.DeserializeObject<AddPersonalJsonFile>(text);
+            var table = obj.AddPersonal;
+            ParseUtil.Parse(Path.ChangeExtension(path, ".txt"), table);
+        }
+
         private static void CreatePersonalBinary(string path, Personal.Personal[] table)
         {
             var data = table.Select(z => z.CreatePersonal()).Select(z => z.Write()).SelectMany(z => z).ToArray();

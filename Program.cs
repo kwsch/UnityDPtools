@@ -7,7 +7,7 @@ namespace UnityDPtools
     internal static class Program
     {
         // modify me to fit your needs
-        private const string root = @"D:\bdsp\update\MonoBehaviour";
+        private const string root = @"D:\bdsp\v111\MonoBehaviour";
 
         private static string Get(string path) => Path.Combine(root, path);
 
@@ -18,6 +18,9 @@ namespace UnityDPtools
 
             string personal = Get("PersonalTable.json");
             PersonalTextParser.Parse(personal);
+
+            string personalExtra = Get("AddPersonalTable.json");
+            PersonalTextParser.ParseExtra(personalExtra);
 
             string map = Get("UgMiniMap.json");
             UndergroundParser.ParseMiniMap(map);

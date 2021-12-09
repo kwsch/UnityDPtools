@@ -163,4 +163,24 @@ namespace UnityDPtools.Personal
         public int HatchFormIndex { get => BitConverter.ToUInt16(Data, 0x40); set => BitConverter.GetBytes((ushort)value).CopyTo(Data, 0x40); }
         public int PokeDexIndex { get => BitConverter.ToUInt16(Data, 0x42); set => BitConverter.GetBytes((ushort)value).CopyTo(Data, 0x42); }
     }
+
+    public class AddPersonalJsonFile
+    {
+        public UnityJsonMetadata m_GameObject { get; set; }
+        public int m_Enabled { get; set; }
+        public UnityJsonMetadata m_Script { get; set; }
+        public string m_Name { get; set; }
+        public Addpersonal[] AddPersonal { get; set; }
+    }
+
+    public class Addpersonal
+    {
+        public int valid_flag { get; set; }
+        public int monsno { get; set; }
+        public int formno { get; set; }
+        public int isEnableSynchronize { get; set; }
+        public int escape { get; set; }
+        public int isDisableReverce { get; set; }
+    }
+
 }

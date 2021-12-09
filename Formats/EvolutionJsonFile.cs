@@ -21,7 +21,7 @@ namespace UnityDPtools.Evolution
         {
             using var ms = new MemoryStream();
             using var bw = new BinaryWriter(ms);
-            if (species != (int)Species.Feebas)
+            if (!IsReversedExport(species))
             {
                 for (int i = 0; i < ar.Length; i += 5)
                 {
@@ -32,7 +32,7 @@ namespace UnityDPtools.Evolution
                     bw.Write(checked((byte)ar[i + 4]));
                 }
             }
-            else // Write the beauty evolution method last
+            else // Write evolutions in reverse (less restricted ones first)
             {
                 for (int i = ar.Length - 5; i >= 0; i -= 5)
                 {
@@ -44,6 +44,12 @@ namespace UnityDPtools.Evolution
                 }
             }
             return ms.ToArray();
+        }
+
+        private bool IsReversedExport(int species)
+        {
+            // Feebas Prism Scale first (still unobtainable), and Thunderstone Magneton
+            return species is (int)Species.Feebas or (int)Species.Magneton;
         }
     }
 }

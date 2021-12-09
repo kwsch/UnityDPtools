@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using PKHeX.Core;
 using UnityDPtools.EggMove;
 
 namespace UnityDPtools
@@ -39,6 +40,13 @@ namespace UnityDPtools
         private static byte[] GetPack(Datum egg)
         {
             var moves = egg.wazaNo.Select(z => (ushort)z).ToArray();
+
+            // Not available until HOME is out.
+            if (egg.no is (int)Species.Snorlax)
+                moves = moves.Where(z => z is not (ushort)Move.PowerUpPunch).ToArray();
+            else if (egg.no is (int)Species.Chatot or (int)Species.Taillow)
+                moves = moves.Where(z => z is not (ushort)Move.Boomburst).ToArray();
+
             using var ms = new MemoryStream();
             using var bw = new BinaryWriter(ms);
             bw.Write((short)egg.formNo);

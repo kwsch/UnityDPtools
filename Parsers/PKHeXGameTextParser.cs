@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using UnityDPtools.DprPlaceName;
 using UnityDPtools.GameText;
+using UnityDPtools.MapInfo;
 
 namespace UnityDPtools.Parsers
 {
@@ -15,6 +16,7 @@ namespace UnityDPtools.Parsers
             T Get<T>(string file) => JsonConvert.DeserializeObject<T>(File.ReadAllText(Path.Combine(dir, file)));
 
             var dprPlaceName = Get<DprPlaceNameJsonFile>("PlaceNameTable.json");
+            var mapZone = Get<MapInfoJson>("MapInfo.json").ZoneData;
             var export = ParseUtil.GetPropertyTable(dprPlaceName.DprPlaceName);
             File.WriteAllLines(Path.Combine(dir, "placeNameTable.txt"), export);
 
@@ -27,6 +29,8 @@ namespace UnityDPtools.Parsers
                 var p3 = new Dictionary<int, string>();
                 var p4 = new Dictionary<int, string>();
                 var p6 = new Dictionary<int, string>();
+                var subFileName = Path.Combine("message", $"{dpLang}_dp_fld_areaname_display.json");
+                var subText = Get<GameJsonFile>(subFileName);
 
                 foreach (var dprPlace in dprPlaceName.DprPlaceName)
                 {
@@ -38,24 +42,12 @@ namespace UnityDPtools.Parsers
                     var gameText = Get<GameJsonFile>(path);
                     var locName = GameTextParser.GetMessage(gameText, dprPlace.MessageLabel);
 
-                    switch (dprPlace.Index / 10000)
-                    {
-                        case 0:
-                            p0.Add(dprPlace.Index % 10000, locName);
-                            break;
-                        case 3:
-                            p3.Add(dprPlace.Index % 10000, locName);
-                            break;
-                        case 4:
-                            p4.Add(dprPlace.Index % 10000, locName);
-                            break;
-                        case 6:
-                            p6.Add(dprPlace.Index % 10000, locName);
-                            break;
-                        default:
-                            throw new ArgumentException();
-                    }
+                    AddLocationName(dprPlace.Index, locName);
                 }
+
+                // Locations 648-657 are not present in the DprPlaceName.json, but they are in the MapInfo. Add them manually.
+                for (int l = 648; l < 658; l++)
+                    AddLocationName(l, p0[250]);
 
                 var baseDir = Path.Combine(dir, "pkhex");
                 Directory.CreateDirectory(baseDir);
@@ -63,6 +55,30 @@ namespace UnityDPtools.Parsers
                 File.WriteAllLines(Path.Combine(baseDir, $"text_bdsp_30000_{pkLang}.txt"), GetLines(p3));
                 File.WriteAllLines(Path.Combine(baseDir, $"text_bdsp_40000_{pkLang}.txt"), GetLines(p4));
                 File.WriteAllLines(Path.Combine(baseDir, $"text_bdsp_60000_{pkLang}.txt"), GetLines(p6));
+
+                void AddLocationName(int index, string locName)
+                {
+                    if (index < 1000)
+                    {
+                        var subLocation = mapZone[index].MSLabel;
+                        if (!string.IsNullOrWhiteSpace(subLocation))
+                        {
+                            var subLocationName = GameTextParser.GetMessage(subText, subLocation);
+                            if (subLocationName != locName)
+                                locName = $"{locName} ({subLocationName})";
+                        }
+                    }
+
+                    var table = (index / 10_000) switch
+                    {
+                        0 => p0,
+                        3 => p3,
+                        4 => p4,
+                        6 => p6,
+                        _ => throw new ArgumentException(),
+                    };
+                    table.Add(index % 10_000, locName);
+                }
             }
         }
 
