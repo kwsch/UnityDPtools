@@ -199,7 +199,7 @@ namespace UnityDPtools
 
         private static void AddHoney(List<byte[]> list, int location, int[] species)
         {
-            var header = GetHeader(location, SlotType.Grass);
+            var header = GetHeader(location, SlotType.HoneyTree);
             var tt = new List<int> { header };
 
             foreach (var t in species.Distinct())
