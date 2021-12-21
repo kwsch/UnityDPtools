@@ -41,21 +41,19 @@ namespace UnityDPtools
         {
             var moves = egg.wazaNo.Select(z => (ushort)z).ToArray();
 
-            // Not available until HOME is out.
-            if (egg.no is (int)Species.Snorlax)
-                moves = moves.Where(z => z is not (ushort)Move.PowerUpPunch).ToArray();
-            else if (egg.no is (int)Species.Taillow)
-                moves = moves.Where(z => z is not (ushort)Move.Boomburst).ToArray();
-            else if (egg.no is (int)Species.Plusle or (int)Species.Minun)
-                moves = moves.Where(z => z is not (ushort)Move.TearfulLook).ToArray();
-            else if (egg.no is (int)Species.Luvdisc)
-                moves = moves.Where(z => z is not (ushort)Move.HealPulse).ToArray();
-            else if (egg.no is (int)Species.Starly)
-                moves = moves.Where(z => z is not (ushort)Move.Detect).ToArray();
-            else if (egg.no is (int)Species.Chatot)
-                moves = moves.Where(z => z is not (ushort)Move.Boomburst or (ushort)Move.Encore).ToArray();
-            else if (egg.no is (int)Species.Spiritomb)
-                moves = moves.Where(z => z is not (ushort)Move.FoulPlay).ToArray();
+            moves = (Species)egg.no switch
+            {
+                // Not available until HOME is out.
+                Species.Snorlax   => moves.Where(z => z is not (ushort)Move.PowerUpPunch).ToArray(),
+                Species.Taillow   => moves.Where(z => z is not (ushort)Move.Boomburst).ToArray(),
+                Species.Plusle    => moves.Where(z => z is not (ushort)Move.TearfulLook).ToArray(),
+                Species.Minun     => moves.Where(z => z is not (ushort)Move.TearfulLook).ToArray(),
+                Species.Luvdisc   => moves.Where(z => z is not (ushort)Move.HealPulse).ToArray(),
+                Species.Starly    => moves.Where(z => z is not (ushort)Move.Detect).ToArray(),
+                Species.Chatot    => moves.Where(z => z is not (ushort)Move.Boomburst and not (ushort)Move.Encore).ToArray(),
+                Species.Spiritomb => moves.Where(z => z is not (ushort)Move.FoulPlay).ToArray(),
+                _ => moves,
+            };
 
             using var ms = new MemoryStream();
             using var bw = new BinaryWriter(ms);
