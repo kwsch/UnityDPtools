@@ -44,8 +44,18 @@ namespace UnityDPtools
             // Not available until HOME is out.
             if (egg.no is (int)Species.Snorlax)
                 moves = moves.Where(z => z is not (ushort)Move.PowerUpPunch).ToArray();
-            else if (egg.no is (int)Species.Chatot or (int)Species.Taillow)
+            else if (egg.no is (int)Species.Taillow)
                 moves = moves.Where(z => z is not (ushort)Move.Boomburst).ToArray();
+            else if (egg.no is (int)Species.Plusle or (int)Species.Minun)
+                moves = moves.Where(z => z is not (ushort)Move.TearfulLook).ToArray();
+            else if (egg.no is (int)Species.Luvdisc)
+                moves = moves.Where(z => z is not (ushort)Move.HealPulse).ToArray();
+            else if (egg.no is (int)Species.Starly)
+                moves = moves.Where(z => z is not (ushort)Move.Detect).ToArray();
+            else if (egg.no is (int)Species.Chatot)
+                moves = moves.Where(z => z is not (ushort)Move.Boomburst or (ushort)Move.Encore).ToArray();
+            else if (egg.no is (int)Species.Spiritomb)
+                moves = moves.Where(z => z is not (ushort)Move.FoulPlay).ToArray();
 
             using var ms = new MemoryStream();
             using var bw = new BinaryWriter(ms);
