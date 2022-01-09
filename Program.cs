@@ -13,6 +13,9 @@ namespace UnityDPtools
 
         private static void Main(string[] args)
         {
+            string dig = Get("DepositItemRawData.json");
+            DigItemParser.Parse(dig);
+
             string mapInfo = Get("MapInfo.json");
             MapInfoParser.Parse(mapInfo);
 
