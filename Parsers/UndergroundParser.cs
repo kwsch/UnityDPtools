@@ -144,7 +144,7 @@ namespace UnityDPtools
             }
 
             var pack = MiniUtil.PackMini(result.ToArray(), "bs");
-            File.WriteAllBytes(Path.Combine(rootPath, $"underground_{game}.pkl"), pack);
+            File.WriteAllBytes(Path.Combine(rootPath, $"encounter_{game}_underground.pkl"), pack);
 
             var ignore = oe.Sheet1.Select(GetDictionaryEntry);
             File.WriteAllLines(Path.Combine(rootPath, "ignoreEggMoves.txt"), ignore);
@@ -274,12 +274,12 @@ namespace UnityDPtools
 
         private static int GetMinThresholdArea(int area) => area switch
         {
-            1 => 6,
-            2 => 8,
-            3 => 1,
-            4 => 4,
-            5 => 1,
-            6 => 7,
+            1 => 6, // NW Top Left Area
+            2 => 8, // NE Top Right Area
+            3 => 1, // Middle Area (not Center)
+            4 => 4, // Center Area
+            5 => 1, // SW Bottom Left Area
+            6 => 3, // SE Bottom Right Area
             _ => throw new ArgumentOutOfRangeException(nameof(area)),
         };
 
