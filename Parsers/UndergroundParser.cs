@@ -172,6 +172,21 @@ namespace UnityDPtools
             new[] { 531, 532, 533, 534, 535, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 616 },
         };
 
+        private static readonly int[] WaterSpawns =
+        {
+            (int)Species.Tentacool,
+            (int)Species.Tentacruel,
+            (int)Species.Horsea,
+            (int)Species.Chinchou,
+            (int)Species.Lanturn,
+            (int)Species.Qwilfish,
+            (int)Species.Surskit,
+            (int)Species.Carvanha,
+            (int)Species.Barboach,
+            (int)Species.Whiscash,
+            (int)Species.Mantyke,
+        };
+
         private static int GetArea(int zone)
         {
             int ctr = 1;
@@ -204,7 +219,11 @@ namespace UnityDPtools
                     continue;
 
                 var form = GetForm(t.monsno, sgForm);
-                var minThresh = GetMinThreshold(area, t.zukanflag);
+                // If you obtain the national dex, the logic short circuits and satisfies the progress requirement.
+                var minThresh = GetMinThreshold(area, 1);
+                // Surf spawns still require a level threshold of 5 to access surf.
+                if (WaterSpawns.Contains(t.monsno))
+                    minThresh = Math.Max(minThresh, 5);
                 for (int i = minThresh; i <= 9; i++)
                 {
                     var (min, max) = GetRange(i);
