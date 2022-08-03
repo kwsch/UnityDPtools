@@ -32,7 +32,8 @@ namespace UnityDPtools
 
         private static void DumpPickle(string path, Datum[] table)
         {
-            var learnsets = table.Select(GetPack).ToArray();
+            // Only entries 0-459 have data we care about; there are no forms with different egg moves, and 460-493 have no egg moves.
+            var learnsets = table.Take(460).Select(GetPack).ToArray();
             var pickle = MiniUtil.PackMini(learnsets, "bs");
             File.WriteAllBytes(path, pickle);
         }
@@ -55,9 +56,9 @@ namespace UnityDPtools
                 _ => moves,
             };
 
-            using var ms = new MemoryStream();
+            using var ms = new MemoryStream(2 + moves.Length * 2);
             using var bw = new BinaryWriter(ms);
-            bw.Write((short)egg.formNo);
+            //bw.Write((short)egg.formNo);
             bw.Write((short)moves.Length);
             foreach (var move in moves)
                 bw.Write(move);
