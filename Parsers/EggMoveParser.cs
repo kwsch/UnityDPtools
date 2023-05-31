@@ -41,21 +41,6 @@ namespace UnityDPtools
         private static byte[] GetPack(Datum egg)
         {
             var moves = egg.wazaNo.Select(z => (ushort)z).ToArray();
-
-            moves = (Species)egg.no switch
-            {
-                // Not available until HOME is out.
-                Species.Snorlax   => moves.Where(z => z is not (ushort)Move.PowerUpPunch).ToArray(),
-                Species.Taillow   => moves.Where(z => z is not (ushort)Move.Boomburst).ToArray(),
-                Species.Plusle    => moves.Where(z => z is not (ushort)Move.TearfulLook).ToArray(),
-                Species.Minun     => moves.Where(z => z is not (ushort)Move.TearfulLook).ToArray(),
-                Species.Luvdisc   => moves.Where(z => z is not (ushort)Move.HealPulse).ToArray(),
-                Species.Starly    => moves.Where(z => z is not (ushort)Move.Detect).ToArray(),
-                Species.Chatot    => moves.Where(z => z is not (ushort)Move.Boomburst and not (ushort)Move.Encore).ToArray(),
-                Species.Spiritomb => moves.Where(z => z is not (ushort)Move.FoulPlay).ToArray(),
-                _ => moves,
-            };
-
             using var ms = new MemoryStream(2 + moves.Length * 2);
             using var bw = new BinaryWriter(ms);
             //bw.Write((short)egg.formNo);
